@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviourSingleton<GameManager>
 {
     [Header("COMMON")]
     [SerializeField] Grid grid;
+    [SerializeField] TextMeshProUGUI scoreText;
 
 
     [Header("EVENTS")]
@@ -19,8 +21,6 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         gridGeneratedEvent?.RegisterAction(OnGridGeneratedWrapper);
         onClusterFindEvent?.RegisterAction(OnClusterFindWrapper);
         OnGridGenerated();
-        Node.CAN_CLICK = true;
-
     }
     private void OnDisable()
     {
@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     public void OnGridGenerated()
     {
         clusterScore = 0;
+        scoreText.text = "Cluster Score : 0";
         if (GameUtil.InEditor)
             return;
         foreach (var n in grid.SpawnedNodes.Values)
@@ -50,7 +51,6 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     private void OnClusterFindWrapper(dynamic cluster) => OnClusterFind(cluster);
     public void OnClusterFind(List<Node> cluster)
     {
-        _ = onClusterFindEvent;
-        Debug.Log($"{++clusterScore}");
+        scoreText.text = $"Cluster Score : {++clusterScore}";
     }
 }

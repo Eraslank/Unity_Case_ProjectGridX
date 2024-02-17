@@ -20,6 +20,11 @@ public class Node : MonoBehaviour, IPointerClickHandler
     [Header("EVENTS")]
     [SerializeField] DynamicEvent OnClusterFind;
 
+    private void OnDestroy()
+    {
+        transform.DOKill();
+    }
+
     public void SetNeighbors(params KeyValuePair<ESide, Node>[] neighbors)
     {
         if (this.neighbors == null)

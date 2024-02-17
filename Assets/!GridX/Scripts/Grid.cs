@@ -3,17 +3,24 @@ using Eraslank.Util;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Grid : MonoBehaviour
 {
-    [SerializeField] Node nodePrefab;
+    [Header("COMMON")]
     public int size = 5;
+    [SerializeField] TMP_InputField gridSizeInput;
+    [SerializeField] Node nodePrefab;
 
-    public IntEvent OnGenerated;
     private Dictionary<Vector2Int, Node> _spawnedNodes = new Dictionary<Vector2Int, Node>();
 
+    [Header("EVENTS")]
+    public IntEvent OnGenerated;
+
+    [Header("MISC")]
+    private Coroutine tweenCor;
     public Dictionary<Vector2Int, Node> SpawnedNodes
     {
         get
@@ -29,6 +36,13 @@ public class Grid : MonoBehaviour
 
     public void Generate()
     {
+        if (!GameUtil.InEditor)
+        {
+            size = int.Parse(gridSizeInput.text);
+            if (size > 20)
+                gridSizeInput.text = $"{size = 20}";
+        }
+
         Node.CAN_CLICK = false;
         transform.DestroyAllChildren(GameUtil.InEditor);
         var posOffset = Vector2.one * ((size / 2f) - .5f);
@@ -36,6 +50,8 @@ public class Grid : MonoBehaviour
 
         _spawnedNodes.Clear();
 
+        if(tweenCor != null)
+            StopCoroutine(tweenCor);
         float delayCounter = 0;
         for (int i = 0; i < size; i++)
         {
@@ -62,12 +78,18 @@ public class Grid : MonoBehaviour
         }
 
 
-        this.SuperInvoke(() =>
+        tweenCor = this.SuperInvoke(() =>
         {
             foreach (var node in _spawnedNodes.Values)
                 node.transform.DOScale(1f, .2f).SetEase(Ease.InExpo);
+
+            this.SuperInvoke(() =>
+            {
+                Node.CAN_CLICK = true;
+                tweenCor = null;
+            }, .2f);
+
         }, delayCounter + .25f);
-        Node.CAN_CLICK = true;
         OnGenerated?.Invoke(size);
     }
 }
