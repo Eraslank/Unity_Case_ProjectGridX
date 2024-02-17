@@ -20,6 +20,11 @@ public abstract class EventChannelSO<T> : ScriptableObject
     }
     public void Invoke(T arg)
     {
+        //foreach(var action in _onEventInvoked.GetInvocationList().Where(a=>a.Target != null)) 
+        //{
+        //    action.DynamicInvoke(arg);
+        //}
+        //_onEventInvoked.GetInvocationList()[0].Target
         _onEventInvoked?.Invoke(arg);
     }
 

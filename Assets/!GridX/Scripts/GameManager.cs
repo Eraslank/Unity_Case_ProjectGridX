@@ -19,17 +19,19 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         gridGeneratedEvent?.RegisterAction(OnGridGeneratedWrapper);
         onClusterFindEvent?.RegisterAction(OnClusterFindWrapper);
         OnGridGenerated();
+        Node.CAN_CLICK = true;
 
     }
     private void OnDisable()
     {
-        //gridGeneratedEvent?.UnRegisterAction(OnGridGeneratedWrapper);
+        gridGeneratedEvent?.UnRegisterAction(OnGridGeneratedWrapper);
         onClusterFindEvent?.UnRegisterAction(OnClusterFindWrapper);
     }
     private void OnGridGeneratedWrapper(int _) => OnGridGenerated();
     public void OnGridGenerated()
     {
-        if (GameUtil.Immediate)
+        clusterScore = 0;
+        if (GameUtil.InEditor)
             return;
         foreach (var n in grid.SpawnedNodes.Values)
         {

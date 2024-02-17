@@ -1,3 +1,5 @@
+using DG.Tweening;
+using Eraslank.Util;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +29,14 @@ public class Grid : MonoBehaviour
 
     public void Generate()
     {
-        transform.DestroyAllChildren(GameUtil.Immediate);
+        Node.CAN_CLICK = false;
+        transform.DestroyAllChildren(GameUtil.InEditor);
         var posOffset = Vector2.one * ((size / 2f) - .5f);
         transform.position = Vector3.zero - (Vector3)posOffset;
 
         _spawnedNodes.Clear();
 
+        float delayCounter = 0;
         for (int i = 0; i < size; i++)
         {
             var row = new GameObject($"Row {i}");
@@ -47,8 +51,23 @@ public class Grid : MonoBehaviour
                 node.transform.localPosition = Vector3.right * j;
 
                 _spawnedNodes.Add(node.coordinates = new Vector2Int(j, i), node);
+
+                if(!GameUtil.InEditor)
+                {
+                    node.transform.localScale = Vector3.zero;
+                    node.transform.DOBounce().SetDelay(delayCounter);
+                }
+                delayCounter += .05f;
             }
         }
+
+
+        this.SuperInvoke(() =>
+        {
+            foreach (var node in _spawnedNodes.Values)
+                node.transform.DOScale(1f, .2f).SetEase(Ease.InExpo);
+        }, delayCounter + .25f);
+        Node.CAN_CLICK = true;
         OnGenerated?.Invoke(size);
     }
 }

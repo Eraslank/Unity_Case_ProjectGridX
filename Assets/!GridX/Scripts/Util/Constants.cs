@@ -31,7 +31,7 @@ public static class ESideExtensions
 
 public static class GameUtil
 {
-    public static bool Immediate //True if in editor
+    public static bool InEditor //True if in editor
     {
         get { return !Application.isPlaying; }
     }
