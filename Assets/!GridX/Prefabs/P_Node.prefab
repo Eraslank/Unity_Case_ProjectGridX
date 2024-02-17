@@ -214,7 +214,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5318f0f69a075448b840c4cad0f591, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coordinates: {x: 0, y: 0}
   xImage: {fileID: 1498521735317186727}
+  neighbors: []
+  OnClusterFind: {fileID: 11400000, guid: 93043857e053b7447ad52a58732c0f1f, type: 2}
 --- !u!61 &1061348336809492529
 BoxCollider2D:
   m_ObjectHideFlags: 0

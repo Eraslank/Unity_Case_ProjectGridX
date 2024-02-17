@@ -4,26 +4,33 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviourSingleton<GameManager>
 {
-    [SerializeField] IntEvent gridGeneratedEvent;
-
+    [Header("COMMON")]
     [SerializeField] Grid grid;
 
-    private void OnValidate()
+
+    [Header("EVENTS")]
+    [SerializeField] IntEvent gridGeneratedEvent;
+    [SerializeField] DynamicEvent onClusterFindEvent;
+
+    public int clusterScore = 0;
+
+    private void Awake()
     {
-        gridGeneratedEvent.RegisterAction(SetNeighborsWrapper);
-    }
-    private void Start()
-    {
-        OnValidate();
-        SetNeighbors();
+        gridGeneratedEvent?.RegisterAction(OnGridGeneratedWrapper);
+        onClusterFindEvent?.RegisterAction(OnClusterFindWrapper);
+        OnGridGenerated();
+
     }
     private void OnDisable()
     {
-        gridGeneratedEvent.UnRegisterAction(SetNeighborsWrapper);
+        //gridGeneratedEvent?.UnRegisterAction(OnGridGeneratedWrapper);
+        onClusterFindEvent?.UnRegisterAction(OnClusterFindWrapper);
     }
-    private void SetNeighborsWrapper(int _) => SetNeighbors();
-    public void SetNeighbors()
+    private void OnGridGeneratedWrapper(int _) => OnGridGenerated();
+    public void OnGridGenerated()
     {
+        if (GameUtil.Immediate)
+            return;
         foreach (var n in grid.SpawnedNodes.Values)
         {
             for (int i = 0; i < ESide.COUNT.Int(); i++)
@@ -36,5 +43,12 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
                 }
             }
         }
+    }
+
+    private void OnClusterFindWrapper(dynamic cluster) => OnClusterFind(cluster);
+    public void OnClusterFind(List<Node> cluster)
+    {
+        _ = onClusterFindEvent;
+        Debug.Log($"{++clusterScore}");
     }
 }

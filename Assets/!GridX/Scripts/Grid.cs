@@ -16,8 +16,10 @@ public class Grid : MonoBehaviour
     {
         get
         {
-            if (_spawnedNodes.Count == 0 ||_spawnedNodes.Any(n => !n.Value))
+            //Failsafe Check To Always Return Correct References
+            if (_spawnedNodes.Count == 0 || _spawnedNodes.Any(n => !n.Value))
                 _spawnedNodes = transform.GetComponentsInChildren<Node>().ToDictionary(n => n.coordinates, n => n);
+
             return _spawnedNodes;
         }
     }

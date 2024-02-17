@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,5 +21,15 @@ public abstract class EventChannelSO<T> : ScriptableObject
     public void Invoke(T arg)
     {
         _onEventInvoked?.Invoke(arg);
+    }
+
+    public void ResetSelf()
+    {
+        _onEventInvoked = null;
+    }
+
+    private void OnEnable()
+    {
+        ResetSelf();
     }
 }

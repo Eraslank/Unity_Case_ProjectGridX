@@ -1,8 +1,15 @@
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class MonoBehaviourSingleton<T> : MonoBehaviour where T : Component
 {
+    [RuntimeInitializeOnLoadMethod]
+    public static void Init()
+    {
+        _instance = null;
+    }
+
     private static T _instance;
     public static T Instance
     {
@@ -26,6 +33,11 @@ public class MonoBehaviourSingleton<T> : MonoBehaviour where T : Component
 
 public class MonoBehaviourSingletonPersistent<T> : MonoBehaviour where T : Component
 {
+    [RuntimeInitializeOnLoadMethod]
+    public static void Init()
+    {
+        Instance = null;
+    }
     public static T Instance { get; private set; }
 
     public virtual void Awake()

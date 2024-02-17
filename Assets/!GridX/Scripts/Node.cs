@@ -7,11 +7,14 @@ using UnityEngine.EventSystems;
 
 public class Node : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] GameObject xImage;
-
+    [Header("COMMON")]
     public Vector2Int coordinates;
 
+    [SerializeField] GameObject xImage;
     [SerializeField] List<Neighbor> neighbors;
+
+    [Header("EVENTS")]
+    [SerializeField] DynamicEvent OnClusterFind;
 
     public void SetNeighbors(params KeyValuePair<ESide, Node>[] neighbors)
     {
@@ -33,7 +36,7 @@ public class Node : MonoBehaviour, IPointerClickHandler
         {
             foreach (var n in cluster)
                 n.SetXState(false);
-            Debug.Log("Cluster");
+            OnClusterFind?.Invoke(cluster);
         }
 
     }

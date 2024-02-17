@@ -7,10 +7,12 @@ using UnityEngine.U2D;
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviourSingleton<CameraController>
 {
-    Camera cam;
-
+    [Header("COMMON")]
     public float scaleFactor = 2f;
 
+    Camera cam;
+
+    [Header("EVENTS")]
     [SerializeField] IntEvent gridGeneratedEvent;
     private void OnValidate()
     {
