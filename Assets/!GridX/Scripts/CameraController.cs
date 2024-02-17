@@ -11,17 +11,19 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 
     public float scaleFactor = 2f;
 
+    [SerializeField] IntEvent gridGeneratedEvent;
     private void OnValidate()
     {
         cam = GetComponent<Camera>();
+        gridGeneratedEvent?.RegisterAction(OnGridGenerated);
     }
-    private void OnEnable()
+    private void Awake()
     {
-        Grid.OnGenerated += OnGridGenerated;
+        OnValidate();
     }
     private void OnDisable()
     {
-        Grid.OnGenerated -= OnGridGenerated;
+        gridGeneratedEvent?.UnRegisterAction(OnGridGenerated);
     }
 
     public void OnGridGenerated(int gridSize)
